@@ -632,11 +632,10 @@ splitAt' _ = splitAt
 -- | /O(n\/m)/ Split a vector into subvectors of equal length.
 chunks :: forall v n m a. (KnownNat n, KnownNat m, VG.Vector v a, VG.Vector v (Vector v m a))
        => Vector v (n*m) a -> Vector v n (Vector v m a)
-chunks (Vector v) = unfoldrN f v
+chunks (Vector v) = unfoldrN (first Vector . VG.splitAt m) v
   where
     m :: Int
     m = fromIntegral (natVal (Proxy :: Proxy m))
-    f = first Vector . VG.splitAt m
 {-# inline chunks #-}
 
 --------------------------------------------------------------------------------
